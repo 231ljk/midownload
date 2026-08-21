@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="官方下载 - 小米风格简洁下载页面">
+    <title>下载中心 - 官方正版下载</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --mi-orange: #FF6700;
+            --mi-orange-light: #FF8533;
+            --mi-orange-dark: #E55C00;
+            --mi-orange-bg: #FFF3E8;
+            --bg-white: #FFFFFF;
+            --bg-gray: #F7F7F7;
+            --bg-light: #FAFAFA;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --text-white: #FFFFFF;
+            --border: #E8E8E8;
+            --border-light: #F0F0F0;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .navbar-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            height: 64px; max-width: 1200px; margin: 0 auto; padding: 0 24px;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon {
+            width: 36px; height: 36px; background: var(--mi-orange);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 18px;
+        }
+        .logo-text { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+        .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none; font-size: 14px;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--mi-orange); }
+        .nav-cta {
+            background: var(--mi-orange); color: white !important;
+            padding: 8px 22px; border-radius: var(--radius-sm);
+            transition: background 0.2s !important;
+        }
+        .nav-cta:hover { background: var(--mi-orange-dark) !important; }
+        .mobile-menu-btn {
+            display: none; background: none; border: none;
+            color: var(--text-primary); font-size: 22px; cursor: pointer; padding: 4px 8px;
+        }
+        .hero {
+            padding: 140px 0 60px; text-align: center;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F7F7F7 100%);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--mi-orange-bg); padding: 6px 16px; border-radius: 100px;
+            font-size: 13px; color: var(--mi-orange); font-weight: 500; margin-bottom: 28px;
+        }
+        .hero-badge .dot {
+            width: 6px; height: 6px; background: var(--mi-orange);
+            border-radius: 50%; animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+        .hero h1 {
+            font-size: 52px; font-weight: 700; line-height: 1.2;
+            margin-bottom: 18px; color: var(--text-primary); letter-spacing: -0.5px;
+        }
+        .hero h1 .highlight { color: var(--mi-orange); }
+        .hero p {
+            font-size: 17px; color: var(--text-secondary); max-width: 560px;
+            margin: 0 auto 36px; line-height: 1.7;
+        }
+        .hero-actions {
+            display: flex; align-items: center; justify-content: center;
+            gap: 14px; flex-wrap: wrap; margin-bottom: 28px;
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: var(--radius-md);
+            font-size: 15px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none;
+        }
+        .btn-primary {
+            background: var(--mi-orange); color: white;
+            box-shadow: 0 4px 16px rgba(255, 103, 0, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--mi-orange-dark); transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255, 103, 0, 0.4);
+        }
+        .btn-secondary {
+            background: white; color: var(--text-primary); border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { border-color: var(--mi-orange); color: var(--mi-orange); }
+        .version-info {
+            font-size: 13px; color: var(--text-tertiary);
+            display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+        }
+        .version-info .divider {
+            width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%;
+        }
+        .download-section { padding: 60px 0 80px; }
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-header h2 {
+            font-size: 34px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);
+        }
+        .section-header p { font-size: 15px; color: var(--text-secondary); }
+        .download-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 24px; margin-bottom: 32px;
+        }
+        .download-card {
+            background: white; border-radius: var(--radius-lg); padding: 32px;
+            box-shadow: var(--shadow-sm); transition: all 0.3s; border: 1px solid var(--border-light);
+        }
+        .download-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .download-card-header {
+            display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+        }
+        .platform-icon {
+            width: 56px; height: 56px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; flex-shrink: 0;
+        }
+        .platform-icon.windows { background: #E8F1FF; }
+        .platform-icon.linux { background: #FFF3E8; }
+        .platform-info h3 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+        .platform-info p { font-size: 13px; color: var(--text-tertiary); }
+        .download-tabs {
+            display: flex; gap: 4px; background: var(--bg-gray);
+            padding: 4px; border-radius: var(--radius-sm); margin-bottom: 20px;
+        }
+        .download-tab {
+            flex: 1; padding: 8px 16px; background: none; border: none;
+            border-radius: 6px; font-size: 13px; font-weight: 500;
+            color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+        }
+        .download-tab.active {
+            background: white; color: var(--mi-orange);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+        .download-tab-content { display: none; }
+        .download-tab-content.active { display: block; }
+        .direct-download { display: flex; flex-direction: column; gap: 12px; }
+        .download-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 14px 24px; background: var(--mi-orange);
+            color: white; border-radius: var(--radius-md); text-decoration: none;
+            font-weight: 600; font-size: 15px; transition: all 0.2s;
+            border: none; cursor: pointer;
+        }
+        .download-btn:hover { background: var(--mi-orange-dark); }
+        .download-btn-outline {
+            background: white; color: var(--text-primary); border: 1px solid var(--border);
+        }
+        .download-btn-outline:hover {
+            border-color: var(--mi-orange); color: var(--mi-orange); background: var(--mi-orange-bg);
+        }
+        .file-meta {
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            font-size: 12px; color: var(--text-tertiary); margin-top: 4px;
+        }
+        .command-download { display: flex; flex-direction: column; gap: 12px; }
+        .command-box {
+            background: #1E1E1E; border-radius: var(--radius-md); padding: 16px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; position: relative;
+        }
+        .command-text {
+            color: #E0E0E0; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 13px; line-height: 1.5; flex: 1; overflow-x: auto; white-space: nowrap;
+        }
+        .command-text .prompt { color: var(--mi-orange); margin-right: 8px; }
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1); border: none; color: #999;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px;
+            cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+        }
+        .copy-btn:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+        .copy-btn.copied { background: rgba(76, 175, 80, 0.3); color: #81C784; }
+        .command-hint { font-size: 12px; color: var(--text-tertiary); text-align: center; }
+        .mobile-download-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+        }
+        .mobile-card {
+            background: white; border-radius: var(--radius-lg); padding: 28px;
+            box-shadow: var(--shadow-sm); transition: all 0.3s;
+            border: 1px solid var(--border-light); text-align: center;
+        }
+        .mobile-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .mobile-card .platform-icon {
+            margin: 0 auto 16px; width: 64px; height: 64px; font-size: 32px;
+        }
+        .mobile-card .platform-icon.android { background: #E8F5E9; }
+        .mobile-card .platform-icon.harmony { background: #E3F2FD; }
+        .mobile-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+        .mobile-card .file-size { font-size: 13px; color: var(--text-tertiary); margin-bottom: 20px; }
+        .features-section { padding: 80px 0; background: white; }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+        }
+        .feature-item { text-align: center; }
+        .feature-icon {
+            width: 56px; height: 56px; margin: 0 auto 16px;
+            background: var(--mi-orange-bg); border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center; font-size: 26px;
+        }
+        .feature-item h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .feature-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+        .changelog-section { padding: 80px 0; }
+        .changelog-container { max-width: 760px; margin: 0 auto; }
+        .changelog-item {
+            background: white; border-radius: var(--radius-lg); padding: 28px 32px;
+            margin-bottom: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+        }
+        .changelog-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+        }
+        .changelog-version { display: flex; align-items: center; gap: 12px; }
+        .changelog-version h3 { font-size: 18px; font-weight: 600; }
+        .changelog-date { font-size: 13px; color: var(--text-tertiary); }
+        .changelog-badge {
+            background: var(--mi-orange-bg); color: var(--mi-orange);
+            font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px;
+        }
+        .changelog-list { list-style: none; }
+        .changelog-list li {
+            position: relative; padding-left: 20px; margin-bottom: 8px;
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .changelog-list li::before {
+            content: ''; position: absolute; left: 0; top: 9px;
+            width: 6px; height: 6px; background: var(--mi-orange); border-radius: 50%;
+        }
+        .changelog-list li.new::before { background: #4CAF50; }
+        .changelog-list li.fix::before { background: #2196F3; }
+        .faq-section { padding: 80px 0; background: white; }
+        .faq-container { max-width: 760px; margin: 0 auto; }
+        .faq-item {
+            background: var(--bg-gray); border-radius: var(--radius-md);
+            margin-bottom: 10px; overflow: hidden; border: 1px solid var(--border-light);
+        }
+        .faq-question {
+            width: 100%; padding: 18px 24px; background: none; border: none;
+            color: var(--text-primary); font-size: 15px; font-weight: 500;
+            text-align: left; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center; transition: background 0.2s;
+        }
+        .faq-question:hover { background: rgba(0, 0, 0, 0.02); }
+        .faq-question .arrow {
+            transition: transform 0.3s; font-size: 12px;
+            color: var(--text-tertiary); flex-shrink: 0;
+        }
+        .faq-item.active .faq-question .arrow { transform: rotate(180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-item.active .faq-answer { max-height: 300px; }
+        .faq-answer-content {
+            padding: 0 24px 20px; font-size: 14px;
+            color: var(--text-secondary); line-height: 1.7;
+        }
+        .footer { background: #2B2B2B; padding: 48px 0 32px; color: #999; }
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px; margin-bottom: 40px;
+        }
+        .footer-brand .logo-text { color: white; }
+        .footer-brand p { font-size: 13px; color: #888; margin-top: 16px; line-height: 1.7; }
+        .footer-col h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #DDD; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a {
+            color: #888; text-decoration: none; font-size: 13px; transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--mi-orange); }
+        .footer-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 24px; border-top: 1px solid #3A3A3A; flex-wrap: wrap; gap: 16px;
+        }
+        .footer-bottom p { font-size: 12px; color: #666; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 12px; color: #666; text-decoration: none; }
+        .footer-links a:hover { color: #999; }
+        .mobile-menu {
+            display: none; position: fixed; top: 64px; left: 0; right: 0;
+            background: white; border-bottom: 1px solid var(--border-light);
+            padding: 8px 24px 16px; z-index: 99; box-shadow: var(--shadow-md);
+        }
+        .mobile-menu.active { display: block; }
+        .mobile-menu a {
+            display: block; padding: 14px 0; color: var(--text-secondary);
+            text-decoration: none; font-size: 15px; border-bottom: 1px solid var(--border-light);
+        }
+        .mobile-menu a:last-child { border-bottom: none; }
+        @media (max-width: 1024px) {
+            .download-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero { padding: 120px 0 50px; }
+            .hero h1 { font-size: 34px; }
+            .hero p { font-size: 15px; }
+            .section-header h2 { font-size: 26px; }
+            .download-card { padding: 24px; }
+            .mobile-download-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            .command-box { flex-direction: column; align-items: stretch; }
+            .copy-btn { align-self: flex-end; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">M</div>
+                <span class="logo-text">MiDownload</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#download">下载</a></li>
+                <li><a href="#features">特性</a></li>
+                <li><a href="#changelog">更新日志</a></li>
+                <li><a href="#faq">常见问题</a></li>
+                <li><a href="#download" class="nav-cta">立即下载</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#download" onclick="toggleMobileMenu()">下载</a>
+        <a href="#features" onclick="toggleMobileMenu()">特性</a>
+        <a href="#changelog" onclick="toggleMobileMenu()">更新日志</a>
+        <a href="#faq" onclick="toggleMobileMenu()">常见问题</a>
+    </div>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                <span>最新版本 v3.0.0 现已发布</span>
+            </div>
+            <h1>官方正版<br><span class="highlight">安全下载</span></h1>
+            <p>支持 Windows、Linux、Android、鸿蒙全平台。官方签名验证，极速下载，一键安装。</p>
+            <div class="hero-actions">
+                <a href="#download" class="btn btn-primary">
+                    <span>⬇</span>
+                    <span>立即下载</span>
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <span>了解更多</span>
+                </a>
+            </div>
+            <div class="version-info">
+                <span>版本 v3.0.0</span>
+                <span class="divider"></span>
+                <span>更新于 2026年8月18日</span>
+                <span class="divider"></span>
+                <span>累计下载 2,580,000+</span>
+            </div>
+        </div>
+    </section>
+    <section class="download-section" id="download">
+        <div class="container">
+            <div class="section-header">
+                <h2>选择您的平台</h2>
+                <p>四大平台全覆盖，选择适合您的版本</p>
+            </div>
+            <div class="download-grid">
+                <div class="download-card">
+                    <div class="download-card-header">
+                        <div class="platform-icon windows">🪟</div>
+                        <div class="platform-info">
+                            <h3>Windows</h3>
+                            <p>支持 Windows 10 / 11 · 64位</p>
+                        </div>
+                    </div>
+                    <div class="download-tabs">
+                        <button class="download-tab active" onclick="switchTab(this, 'win-direct')">直接下载</button>
+                        <button class="download-tab" onclick="switchTab(this, 'win-command')">命令下载</button>
+                    </div>
+                    <div class="download-tab-content active" id="win-direct">
+                        <div class="direct-download">
+                            <button class="download-btn" onclick="handleDownload('windows-installer')">
+                                <span>⬇</span>
+                                <span>下载安装版 (.exe)</span>
+                            </button>
+                            <button class="download-btn download-btn-outline" onclick="handleDownload('windows-portable')">
+                                下载便携版 (.zip)
+                            </button>
+                            <div class="file-meta">
+                                <span>v3.0.0</span>
+                                <span>·</span>
+                                <span>92.5 MB</span>
+                                <span>·</span>
+                                <span>官方签名</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="download-tab-content" id="win-command">
+                        <div class="command-download">
+                            <div class="command-box">
+                                <div class="command-text">
+                                    <span class="prompt">></span>winget install MiDownload
+                                </div>
+                                <button class="copy-btn" onclick="copyCommand(this, 'winget install MiDownload')">复制</button>
+                            </div>
+                            <div class="command-box">
+                                <div class="command-text">
+                                    <span class="prompt">></span>choco install midownload
+                                </div>
+                                <button class="copy-btn" onclick="copyCommand(this, 'choco install midownload')">复制</button>
+                            </div>
+                            <p class="command-hint">使用 winget 或 Chocolatey 包管理器一键安装</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="download-card">
+                    <div class="download-card-header">
+                        <div class="platform-icon linux">🐧</div>
+                        <div class="platform-info">
+                            <h3>Linux</h3>
+                            <p>支持 Ubuntu / Debian / CentOS 等</p>
+                        </div>
+                    </div>
+                    <div class="download-tabs">
+                        <button class="download-tab active" onclick="switchTab(this, 'linux-direct')">直接下载</button>
+                        <button class="download-tab" onclick="switchTab(this, 'linux-command')">命令下载</button>
+                    </div>
+                    <div class="download-tab-content active" id="linux-direct">
+                        <div class="direct-download">
+                            <button class="download-btn" onclick="handleDownload('linux-appimage')">
+                                <span>⬇</span>
+                                <span>下载 AppImage</span>
+                            </button>
+                            <button class="download-btn download-btn-outline" onclick="handleDownload('linux-deb')">
+                                下载 .deb 包
+                            </button>
+                            <div class="file-meta">
+                                <span>v3.0.0</span>
+                                <span>·</span>
+                                <span>85.2 MB</span>
+                                <span>·</span>
+                                <span>x86_64 / ARM64</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="download-tab-content" id="linux-command">
+                        <div class="command-download">
+                            <div class="command-box">
+                                <div class="command-text">
+                                    <span class="prompt">$</span>curl -fsSL https://download.midownload.com/install.sh | bash
+                                </div>
+                                <button class="copy-btn" onclick="copyCommand(this, 'curl -fsSL https://download.midownload.com/install.sh | bash')">复制</button>
+                            </div>
+                            <div class="command-box">
+                                <div class="command-text">
+                                    <span class="prompt">$</span>sudo apt install ./midownload_3.0.0_amd64.deb
+                                </div>
+                                <button class="copy-btn" onclick="copyCommand(this, 'sudo apt install ./midownload_3.0.0_amd64.deb')">复制</button>
+                            </div>
+                            <p class="command-hint">一键脚本自动安装，或使用 dpkg/apt 手动安装</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile-download-grid">
+                <div class="mobile-card">
+                    <div class="platform-icon android">🤖</div>
+                    <h3>Android</h3>
+                    <p class="file-size">v3.0.0 · 48.6 MB · APK</p>
+                    <button class="download-btn" onclick="handleDownload('android')">
+                        <span>⬇</span>
+                        <span>下载 APK</span>
+                    </button>
+                    <button class="download-btn download-btn-outline" style="margin-top: 10px;" onclick="handleDownload('android-play')">
+                        Google Play 下载
+                    </button>
+                </div>
+                <div class="mobile-card">
+                    <div class="platform-icon harmony">🔷</div>
+                    <h3>HarmonyOS 鸿蒙</h3>
+                    <p class="file-size">v3.0.0 · 42.3 MB · HAP</p>
+                    <button class="download-btn" onclick="handleDownload('harmony')">
+                        <span>⬇</span>
+                        <span>下载 HAP 包</span>
+                    </button>
+                    <button class="download-btn download-btn-outline" style="margin-top: 10px;" onclick="handleDownload('harmony-appgallery')">
+                        应用市场下载
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>为什么选择我们</h2>
+                <p>安全、快速、简洁，一切为了更好的体验</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <h3>官方安全签名</h3>
+                    <p>所有安装包经过官方数字签名，杜绝篡改和恶意软件。</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3>极速下载</h3>
+                    <p>全球 CDN 节点加速，支持断点续传，满速下载不等待。</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <h3>自动更新</h3>
+                    <p>内置增量更新机制，第一时间获取新功能和安全补丁。</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h3>简洁易用</h3>
+                    <p>精心设计的交互界面，零学习成本，开箱即用。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="changelog-section" id="changelog">
+        <div class="container">
+            <div class="section-header">
+                <h2>更新日志</h2>
+                <p>了解最新版本的改进和优化</p>
+            </div>
+            <div class="changelog-container">
+                <div class="changelog-item">
+                    <div class="changelog-header">
+                        <div class="changelog-version">
+                            <h3>v3.0.0</h3>
+                            <span class="changelog-badge">最新</span>
+                        </div>
+                        <span class="changelog-date">2026年8月18日</span>
+                    </div>
+                    <ul class="changelog-list">
+                        <li class="new">全新架构升级，启动速度提升 60%</li>
+                        <li class="new">新增鸿蒙原生应用支持</li>
+                        <li class="new">支持 Linux ARM64 架构</li>
+                        <li class="fix">修复 Windows 11 24H2 兼容性问题</li>
+                        <li class="fix">优化大文件处理时的内存占用</li>
+                        <li>更新界面设计，更加简洁现代</li>
+                    </ul>
+                </div>
+                <div class="changelog-item">
+                    <div class="changelog-header">
+                        <div class="changelog-version">
+                            <h3>v2.8.2</h3>
+                        </div>
+                        <span class="changelog-date">2026年7月25日</span>
+                    </div>
+                    <ul class="changelog-list">
+                        <li class="fix">修复特定网络环境下下载中断的问题</li>
+                        <li class="fix">修复 Android 15 通知栏显示异常</li>
+                        <li>提升整体稳定性</li>
+                    </ul>
+                </div>
+                <div class="changelog-item">
+                    <div class="changelog-header">
+                        <div class="changelog-version">
+                            <h3>v2.8.0</h3>
+                        </div>
+                        <span class="changelog-date">2026年6月30日</span>
+                    </div>
+                    <ul class="changelog-list">
+                        <li class="new">新增命令行安装方式（winget / curl）</li>
+                        <li class="new">支持深色模式自动切换</li>
+                        <li class="fix">修复若干已知问题</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>常见问题</h2>
+                <p>快速找到您需要的答案</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>下载的文件安全吗？会有病毒吗？</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            所有官方安装包均经过数字签名，并通过多家主流杀毒软件检测。我们承诺不包含任何恶意软件、广告插件或捆绑程序。如遇杀毒软件误报，请添加白名单或联系客服。
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>命令行安装方式如何使用？</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Windows 用户可在终端中使用 winget install MiDownload 一键安装（需 Windows 10 1809+）。Linux 用户可使用 curl 一键脚本自动完成下载和安装，或下载 .deb 包后通过 sudo apt install 手动安装。
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>鸿蒙版本如何安装？</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            鸿蒙用户推荐通过华为应用市场搜索下载，自动完成安装。也可下载 HAP 安装包，在手机文件管理器中点击安装（需在设置中允许"未知来源应用安装"）。支持 HarmonyOS 3.0 及以上版本。
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>如何更新到最新版本？</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            软件内置自动更新功能，启动时会自动检测新版本。也可在"设置-关于"中手动检查更新。如自动更新失败，可直接从本页面下载最新安装包覆盖安装，数据和设置会自动保留。
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>软件是免费的吗？</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            基础版本完全免费，包含所有核心功能，无使用时间限制。我们同时提供专业版订阅，解锁高级功能如云端同步、批量处理、优先技术支持等。您可以在软件内查看详细对比并选择适合的版本。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">M</div>
+                        <span class="logo-text">MiDownload</span>
+                    </a>
+                    <p>提供安全、快速、免费的官方软件下载服务。全平台覆盖，官方签名验证，让您放心下载。</p>
+                </div>
+                <div class="footer-col">
+                    <h4>产品</h4>
+                    <ul>
+                        <li><a href="#download">下载中心</a></li>
+                        <li><a href="#features">功能特性</a></li>
+                        <li><a href="#changelog">更新日志</a></li>
+                        <li><a href="#">版本路线</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>支持</h4>
+                    <ul>
+                        <li><a href="#faq">常见问题</a></li>
+                        <li><a href="#">帮助文档</a></li>
+                        <li><a href="#">用户社区</a></li>
+                        <li><a href="#">联系我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>关于</h4>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">服务条款</a></li>
+                        <li><a href="#">开源许可</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 MiDownload. 保留所有权利。</p>
+                <div class="footer-links">
+                    <a href="#">隐私政策</a>
+                    <a href="#">服务条款</a>
+                    <a href="#">Cookie 设置</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        function switchTab(btn, targetId) {
+            const card = btn.closest('.download-card');
+            card.querySelectorAll('.download-tab').forEach(t => t.classList.remove('active'));
+            card.querySelectorAll('.download-tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+        }
+        function copyCommand(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '已复制';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                btn.textContent = '已复制';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+        function handleDownload(type) {
+            const names = {
+                'windows-installer': 'Windows 安装版 (.exe)',
+                'windows-portable': 'Windows 便携版 (.zip)',
+                'linux-appimage': 'Linux AppImage',
+                'linux-deb': 'Linux .deb 包',
+                'android': 'Android APK',
+                'android-play': 'Google Play',
+                'harmony': '鸿蒙 HAP 包',
+                'harmony-appgallery': '华为应用市场'
+            };
+            const name = names[type] || type;
+            alert('即将开始下载：' + name + '\n\n这是演示页面，实际部署时请将下载链接替换为真实文件地址。');
+        }
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(faq => faq.classList.remove('active'));
+            if (!isActive) item.classList.add('active');
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
