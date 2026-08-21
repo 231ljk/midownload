@@ -2,8 +2,12 @@
 // Nx Programming Language - Hello World & Feature Showcase
 // Version: 0.1.0 (Developer Preview)
 // ============================================================
+//
+// Nx 是一个全场景覆盖、双范式统一、AI 原生、全语言生态融合的编程语言。
+// 本示例展示 Nx 的核心语法特性，可直接通过 `nx run hello.nx` 运行。
+//
 
-// 基础语法 - 变量与函数
+// --- 1. 基础语法：变量与函数 ---
 app_name = "Nx Programming Language"
 app_version = "0.1.0"
 pi = 3.14159265359
@@ -12,20 +16,25 @@ func greet(name) {
     print("Hello, " + name + "! Welcome to " + app_name)
 }
 
-func calculate_area(radius, unit = "cm") {
-    area = pi * radius * radius
-    return area
+func add(a, b) {
+    return a + b
 }
 
-func sum(numbers...) {
-    total = 0
-    for n in numbers {
-        total = total + n
-    }
-    return total
+func calculate_area(radius) {
+    return pi * radius * radius
 }
 
-// 控制流
+func factorial(n) {
+    if n <= 1 { return 1 }
+    return n * factorial(n - 1)
+}
+
+func fibonacci(n) {
+    if n <= 1 { return n }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+// --- 2. 控制流 ---
 func classify_number(n) {
     if n > 0 {
         print(n + " is positive")
@@ -36,178 +45,143 @@ func classify_number(n) {
     }
 }
 
-func fibonacci(n) {
-    if n <= 1 { return n }
-    return fibonacci(n - 1) + fibonacci(n - 2)
+func demonstrate_loops() {
+    print("For loop (range):")
+    for i in 0..5 {
+        print("  i = " + i)
+    }
+
+    print("For loop (list):")
+    fruits = ["apple", "banana", "cherry"]
+    for fruit in fruits {
+        print("  - " + fruit)
+    }
+
+    print("While loop:")
+    count = 0
+    while count < 3 {
+        print("  count = " + count)
+        count = count + 1
+    }
 }
 
-// 面向对象 - 接口与类
-interface Shape {
-    func area() -> float
-    func perimeter() -> float
+// --- 3. 面向对象：类与继承 ---
+class Shape {
+    var name = "Shape"
+
+    func init(name) {
+        this.name = name
+    }
+
+    func area() {
+        return 0
+    }
+
+    func describe() {
+        print(this.name + " area = " + this.area())
+    }
 }
 
 class Circle : Shape {
     var radius
-    var color = "red"
 
     func init(radius) {
+        super.init("Circle")
         this.radius = radius
     }
 
     func area() {
         return pi * this.radius * this.radius
     }
+}
 
-    func perimeter() {
-        return 2 * pi * this.radius
+class Rectangle : Shape {
+    var width
+    var height
+
+    func init(width, height) {
+        super.init("Rectangle")
+        this.width = width
+        this.height = height
+    }
+
+    func area() {
+        return this.width * this.height
     }
 }
 
-class ColoredCircle : Circle {
-    var border_width = 2
-
-    func init(radius, color) {
-        super.init(radius)
-        this.color = color
-    }
-
-    func describe() {
-        print("A " + this.color + " circle with radius " + this.radius)
-    }
-}
-
-// 泛型类
-class Stack[T] {
-    var items = []
-
-    func push(item: T) {
-        this.items.append(item)
-    }
-
-    func pop() -> T {
-        return this.items.pop()
-    }
-}
-
-// 混入 Mixin
-mixin Logger {
-    func log(message) {
-        print("[LOG] " + message)
-    }
-}
-
-class Service with Logger {
-    var name
-
-    func init(name) {
-        this.name = name
-        this.log("Service " + name + " started")
-    }
-}
-
-// 数据类型
+// --- 4. 数据类型与标准库 ---
 func demonstrate_collections() {
-    // List
+    // 列表 (List)
     numbers = [1, 2, 3, 4, 5]
-    numbers.append(6)
     print("List: " + numbers)
-    print("First: " + numbers[0])
+    print("Length: " + numbers.length)
+    print("First element: " + numbers[0])
+    numbers.append(6)
+    print("After append: " + numbers)
+    print("Sum: " + sum(numbers))
+    print("Max: " + max(numbers))
+    print("Min: " + min(numbers))
 
-    // 列表推导式
-    squares = [x * x for x in numbers]
-    print("Squares: " + squares)
+    // 字符串 (String)
+    message = "Hello, Nx!"
+    print("")
+    print("String: " + message)
+    print("Upper: " + message.upper())
+    print("Lower: " + message.lower())
+    print("Length: " + message.length)
+    print("Contains 'Nx': " + message.contains("Nx"))
 
-    // Dict
+    // 字典 (Dict)
     person = {
         "name": "Alice",
         "age": 25,
-        "skills": ["Nx", "Python", "Rust"]
+        "city": "Beijing"
     }
-    print("Name: " + person["name"])
-
-    // Tuple - 多返回值
-    func get_user() {
-        return ("Bob", 30, "Engineer")
-    }
-    name, age, job = get_user()
-    print(name + " - " + age + " - " + job)
-
-    // Set
-    unique = {1, 2, 2, 3, 3, 3}
-    print("Set: " + unique)
+    print("")
+    print("Dict - Name: " + person["name"])
+    print("Dict - Age: " + person["age"])
+    print("Dict - Keys: " + person.keys())
 }
 
-// 错误处理
-func divide(a, b) {
-    if b == 0 {
-        throw Error("Division by zero")
-    }
-    return a / b
-}
-
-func demonstrate_error_handling() {
-    try {
-        result = divide(10, 0)
-    } catch err {
-        print("Caught error: " + err.message)
-    } finally {
-        print("Cleanup done")
-    }
-}
-
-// 主函数
+// --- 5. 主函数 ---
 func main() {
     print("========================================")
     print("  Nx Programming Language - Hello World")
-    print("  v0.1.0 - Developer Preview")
+    print("  v" + app_version + " - Developer Preview")
     print("========================================")
     print("")
 
-    // 基础语法
+    // 1. 基础语法
     print("--- 1. Basic Syntax ---")
     greet("Developer")
-    area = calculate_area(5)
-    print("Area of circle r=5: " + area)
-    print("Sum 1..5: " + sum(1, 2, 3, 4, 5))
+    print("10 + 5 = " + add(10, 5))
+    print("Area of circle r=5: " + calculate_area(5))
+    print("factorial(5) = " + factorial(5))
+    print("fibonacci(10) = " + fibonacci(10))
     print("")
 
-    // 控制流
+    // 2. 控制流
     print("--- 2. Control Flow ---")
     classify_number(42)
     classify_number(-7)
-    print("Fibonacci first 10:")
-    for i in 0..10 {
-        print("  fib(" + i + ") = " + fibonacci(i))
-    }
+    classify_number(0)
+    print("")
+    demonstrate_loops()
     print("")
 
-    // 面向对象
+    // 3. 面向对象
     print("--- 3. OOP ---")
     circle = Circle(10)
-    print("Circle area: " + circle.area())
-    print("Circle perimeter: " + circle.perimeter())
+    circle.describe()
 
-    colored = ColoredCircle(5, "blue")
-    colored.describe()
-
-    stack = Stack[int]()
-    stack.push(1)
-    stack.push(2)
-    stack.push(3)
-    print("Stack pop: " + stack.pop())
-
-    service = Service("MyService")
+    rect = Rectangle(4, 5)
+    rect.describe()
     print("")
 
-    // 数据类型
+    // 4. 数据类型
     print("--- 4. Collections ---")
     demonstrate_collections()
-    print("")
-
-    // 错误处理
-    print("--- 5. Error Handling ---")
-    demonstrate_error_handling()
     print("")
 
     print("========================================")
@@ -216,4 +190,5 @@ func main() {
     print("========================================")
 }
 
+// 运行主函数
 main()
